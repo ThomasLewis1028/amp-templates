@@ -1,7 +1,7 @@
 Meta.DisplayName=Rainbow Six 3: Raven Shield (OpenRVS)
 Meta.Description=Raven Shield 1.60 dedicated server running under Wine with OpenRVS
 Meta.OS=Windows, Linux
-Meta.AarchSupport=Unsupported
+Meta.AarchSupport=Unknown
 Meta.Arch=x86_64
 Meta.Author=Thomas Lewis
 Meta.URL=https://github.com/OpenRVS-devs/OpenRVS
