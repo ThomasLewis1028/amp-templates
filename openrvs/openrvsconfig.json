@@ -1,0 +1,204 @@
+[
+  {
+    "DisplayName": "Server Name",
+    "Category": "Raven Shield:stadia_controller",
+    "Description": "Name shown in the OpenRVS server list.",
+    "Keywords": "servername",
+    "FieldName": "ServerName",
+    "InputType": "text",
+    "IsFlagArgument": false,
+    "ParamFieldName": "ServerName",
+    "IncludeInCommandLine": false,
+    "DefaultValue": "Seventh Fleet RVS",
+    "EnumValues": {}
+  },
+  {
+    "DisplayName": "Message of the Day",
+    "Category": "Raven Shield:stadia_controller",
+    "Description": "Shown to players on connect.",
+    "Keywords": "motd",
+    "FieldName": "MOTD",
+    "InputType": "text",
+    "IsFlagArgument": false,
+    "ParamFieldName": "MOTD",
+    "IncludeInCommandLine": false,
+    "DefaultValue": "Welcome aboard.",
+    "EnumValues": {}
+  },
+  {
+    "DisplayName": "Max Players",
+    "Category": "Raven Shield:stadia_controller",
+    "Description": "Player slots.",
+    "Keywords": "maxplayers",
+    "FieldName": "MaxPlayers",
+    "InputType": "number",
+    "IsFlagArgument": false,
+    "ParamFieldName": "MaxPlayers",
+    "IncludeInCommandLine": false,
+    "DefaultValue": "8",
+    "EnumValues": {},
+    "MinValue": "1",
+    "MaxValue": "16"
+  },
+  {
+    "DisplayName": "Require Password",
+    "Category": "Raven Shield:stadia_controller",
+    "Description": "Require a join password. Recommended, since OpenRVS self-registers your server on the public list.",
+    "Keywords": "usepassword",
+    "FieldName": "UsePassword",
+    "InputType": "checkbox",
+    "IsFlagArgument": false,
+    "ParamFieldName": "UsePassword",
+    "IncludeInCommandLine": false,
+    "DefaultValue": "True",
+    "EnumValues": {
+      "False": "False",
+      "True": "True"
+    }
+  },
+  {
+    "DisplayName": "Join Password",
+    "Category": "Raven Shield:stadia_controller",
+    "Description": "Password players need to join.",
+    "Keywords": "gamepassword",
+    "FieldName": "GamePassword",
+    "InputType": "password",
+    "IsFlagArgument": false,
+    "ParamFieldName": "GamePassword",
+    "IncludeInCommandLine": false,
+    "DefaultValue": "",
+    "EnumValues": {}
+  },
+  {
+    "DisplayName": "Admin Password",
+    "Category": "Raven Shield:stadia_controller",
+    "Description": "In-game admin password. UseAdminPassword is forced to True.",
+    "Keywords": "adminpassword",
+    "FieldName": "AdminPassword",
+    "InputType": "password",
+    "IsFlagArgument": false,
+    "ParamFieldName": "AdminPassword",
+    "IncludeInCommandLine": false,
+    "DefaultValue": "",
+    "EnumValues": {}
+  },
+  {
+    "DisplayName": "Terrorist Count",
+    "Category": "Raven Shield:stadia_controller",
+    "Description": "Number of terrorists in co-op modes.",
+    "Keywords": "nbterro",
+    "FieldName": "NbTerro",
+    "InputType": "number",
+    "IsFlagArgument": false,
+    "ParamFieldName": "NbTerro",
+    "IncludeInCommandLine": false,
+    "DefaultValue": "35",
+    "EnumValues": {},
+    "MinValue": "1",
+    "MaxValue": "40"
+  },
+  {
+    "DisplayName": "AI Difficulty",
+    "Category": "Raven Shield:stadia_controller",
+    "Description": "Terrorist difficulty.",
+    "Keywords": "difflevel",
+    "FieldName": "DiffLevel",
+    "InputType": "enum",
+    "IsFlagArgument": false,
+    "ParamFieldName": "DiffLevel",
+    "IncludeInCommandLine": false,
+    "DefaultValue": "2",
+    "EnumValues": {
+      "1": "Rookie",
+      "2": "Veteran",
+      "3": "Elite"
+    }
+  },
+  {
+    "DisplayName": "Friendly Fire",
+    "Category": "Raven Shield:stadia_controller",
+    "Description": "Enable friendly fire.",
+    "Keywords": "friendlyfire",
+    "FieldName": "FriendlyFire",
+    "InputType": "checkbox",
+    "IsFlagArgument": false,
+    "ParamFieldName": "FriendlyFire",
+    "IncludeInCommandLine": false,
+    "DefaultValue": "True",
+    "EnumValues": {
+      "False": "False",
+      "True": "True"
+    }
+  },
+  {
+    "DisplayName": "AI Backup",
+    "Category": "Raven Shield:stadia_controller",
+    "Description": "Fill empty co-op slots with AI teammates.",
+    "Keywords": "aibkp",
+    "FieldName": "AIBkp",
+    "InputType": "checkbox",
+    "IsFlagArgument": false,
+    "ParamFieldName": "AIBkp",
+    "IncludeInCommandLine": false,
+    "DefaultValue": "True",
+    "EnumValues": {
+      "False": "False",
+      "True": "True"
+    }
+  },
+  {
+    "DisplayName": "Round Time (s)",
+    "Category": "Raven Shield:stadia_controller",
+    "Description": "Length of each round in seconds.",
+    "Keywords": "roundtime",
+    "FieldName": "RoundTime",
+    "InputType": "number",
+    "IsFlagArgument": false,
+    "ParamFieldName": "RoundTime",
+    "IncludeInCommandLine": false,
+    "DefaultValue": "900",
+    "EnumValues": {}
+  },
+  {
+    "DisplayName": "Between Round Time (s)",
+    "Category": "Raven Shield:stadia_controller",
+    "Description": "Planning/gear time between rounds.",
+    "Keywords": "betweenroundtime",
+    "FieldName": "BetweenRoundTime",
+    "InputType": "number",
+    "IsFlagArgument": false,
+    "ParamFieldName": "BetweenRoundTime",
+    "IncludeInCommandLine": false,
+    "DefaultValue": "45",
+    "EnumValues": {}
+  },
+  {
+    "DisplayName": "Rounds Per Match",
+    "Category": "Raven Shield:stadia_controller",
+    "Description": "Rounds before the map rotates.",
+    "Keywords": "roundspermatch",
+    "FieldName": "RoundsPerMatch",
+    "InputType": "number",
+    "IsFlagArgument": false,
+    "ParamFieldName": "RoundsPerMatch",
+    "IncludeInCommandLine": false,
+    "DefaultValue": "5",
+    "EnumValues": {}
+  },
+  {
+    "DisplayName": "Rotate Only On Success",
+    "Category": "Raven Shield:stadia_controller",
+    "Description": "In co-op, only rotate the map after a successful round.",
+    "Keywords": "rotatemap",
+    "FieldName": "RotateMap",
+    "InputType": "checkbox",
+    "IsFlagArgument": false,
+    "ParamFieldName": "RotateMap",
+    "IncludeInCommandLine": false,
+    "DefaultValue": "False",
+    "EnumValues": {
+      "False": "False",
+      "True": "True"
+    }
+  }
+]

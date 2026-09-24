@@ -1,0 +1,17 @@
+[
+  {
+    "UpdateStageName": "SteamCMD Download",
+    "UpdateSourcePlatform": "All",
+    "UpdateSource": "SteamCMD",
+    "UpdateSourceData": "19830",
+    "UpdateSourceArgs": "19830",
+    "ForceDownloadPlatform": "Windows"
+  },
+  {
+    "UpdateStageName": "Initialise Wine Prefix",
+    "UpdateSourcePlatform": "Linux",
+    "UpdateSource": "Executable",
+    "UpdateSourceData": "/bin/bash",
+    "UpdateSourceArgs": "-c 'WINEPREFIX=\"{{$FullRootDir}}.wine\" WINEDEBUG=-all /usr/bin/wineboot --init --update'"
+  }
+]

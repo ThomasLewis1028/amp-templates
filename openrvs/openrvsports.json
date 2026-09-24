@@ -1,0 +1,23 @@
+[
+  {
+    "Protocol": "UDP",
+    "Port": 7777,
+    "Ref": "GamePort",
+    "Name": "Game Port",
+    "Description": "Main game traffic. Written to Port= in RavenShield.ini."
+  },
+  {
+    "Protocol": "UDP",
+    "Port": 8777,
+    "Ref": "ServerBeaconPort",
+    "Name": "Server Beacon Port",
+    "Description": "Must be exactly Game Port + 1000 or OpenRVS will not work."
+  },
+  {
+    "Protocol": "UDP",
+    "Port": 9777,
+    "Ref": "BeaconPort",
+    "Name": "Client Beacon Port",
+    "Description": "Must be exactly Game Port + 2000."
+  }
+]
