@@ -8,10 +8,19 @@
     "ForceDownloadPlatform": "Windows"
   },
   {
+    "UpdateStageName": "Fetch set-ini.sh",
+    "UpdateSourcePlatform": "Linux",
+    "UpdateSource": "FetchURL",
+    "UpdateSourceData": "https://raw.githubusercontent.com/ThomasLewis1028/amp-templates/main/set-ini.sh",
+    "UpdateSourceArgs": "set-ini.sh",
+    "UpdateSourceTarget": "{{$FullInstanceDir}}",
+    "OverwriteExistingFiles": true
+  },
+  {
     "UpdateStageName": "Initialise Wine Prefix",
     "UpdateSourcePlatform": "Linux",
     "UpdateSource": "Executable",
     "UpdateSourceData": "/bin/bash",
-    "UpdateSourceArgs": "-c 'WINEPREFIX=\"{{$FullRootDir}}.wine\" WINEDEBUG=-all /usr/bin/wineboot --init --update'"
+    "UpdateSourceArgs": "-c \"WINEPREFIX='{{$FullRootDir}}.wine' WINEDEBUG=-all /usr/bin/wineboot --init --update\""
   }
 ]

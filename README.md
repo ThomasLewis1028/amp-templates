@@ -21,7 +21,8 @@ openrvsconfig.json     Meta.ConfigManifest    - user-facing settings
 openrvsmetaconfig.json Meta.MetaConfigManifest - config-file mappings
 openrvsports.json      App.Ports        via @IncludeJson[...]
 openrvsupdates.json    App.UpdateSources via @IncludeJson[...]
-set-ini.sh             Pre-start stage; writes settings into Server.ini
+set-ini.sh             Rewrites Key=Value lines in the game's INIs. NOT staged
+                       by AMP - fetched into the instance by a FetchURL stage.
 ```
 
 `manifest.json` fields are fixed by AMP (`ADSModule.RepoSpec`, lowercase JSON
@@ -66,6 +67,29 @@ A `.kvp` that trips any of these is dropped silently:
   and resolve relative to the `.kvp`.
 - A template whose `Meta.DisplayName` collides with an already-loaded one is
   renamed to `<name> (<repo dir>)` rather than replacing it.
+
+## Gotchas in update and pre-start stages
+
+`UpdateSource: Executable` passes `UpdateSourceArgs` verbatim to
+`Process.Start` as the `Arguments` string. .NET splits that with Windows
+rules even on Linux: double quotes group, backslashes escape, and **single
+quotes are ordinary characters**. So the outer quoting must be double:
+
+```json
+"UpdateSourceArgs": "-c \"WINEPREFIX='{{$FullRootDir}}.wine' /usr/bin/wineboot --init\""
+```
+
+Reversing that produces `bash: -c: line 1: unexpected EOF while looking for
+matching `''` and the stage fails without stopping the update.
+
+Only `Meta.ConfigManifest` and `Meta.MetaConfigManifest` are copied into a new
+instance (as `configmanifest.json` / `metaconfig.json`). Any other file the
+template needs — helper scripts, default config files — must be pulled in by a
+`FetchURL` stage, exactly as the official templates do.
+
+Path variables resolve with a trailing separator: `{{$FullInstanceDir}}` is the
+instance root, `{{$FullRootDir}}` is `App.RootDir`, `{{$FullBaseDir}}` is
+`App.BaseDirectory`.
 
 ## Testing a change
 
