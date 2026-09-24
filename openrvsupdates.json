@@ -17,6 +17,49 @@
     "OverwriteExistingFiles": true
   },
   {
+    "UpdateStageName": "Fetch install-openrvs.sh",
+    "UpdateSourcePlatform": "Linux",
+    "UpdateSource": "FetchURL",
+    "UpdateSourceData": "https://raw.githubusercontent.com/ThomasLewis1028/amp-templates/main/install-openrvs.sh",
+    "UpdateSourceArgs": "install-openrvs.sh",
+    "UpdateSourceTarget": "{{$FullInstanceDir}}",
+    "OverwriteExistingFiles": true
+  },
+  {
+    "UpdateStageName": "Fetch patch-gameservice.sh",
+    "UpdateSourcePlatform": "Linux",
+    "UpdateSource": "FetchURL",
+    "UpdateSourceData": "https://raw.githubusercontent.com/ThomasLewis1028/amp-templates/main/patch-gameservice.sh",
+    "UpdateSourceArgs": "patch-gameservice.sh",
+    "UpdateSourceTarget": "{{$FullInstanceDir}}",
+    "OverwriteExistingFiles": true
+  },
+  {
+    "UpdateStageName": "Install OpenRVS",
+    "UpdateSourcePlatform": "All",
+    "UpdateSource": "FetchURL",
+    "UpdateSourceData": "https://github.com/OpenRVS-devs/OpenRVS/releases/download/v1.6/OpenRVS-v1.6.zip",
+    "UpdateSourceArgs": "OpenRVS-v1.6.zip",
+    "UpdateSourceTarget": "19830/system",
+    "UnzipUpdateSource": true,
+    "OverwriteExistingFiles": true,
+    "DeleteAfterExtract": true
+  },
+  {
+    "UpdateStageName": "Wire OpenRVS server actors",
+    "UpdateSourcePlatform": "Linux",
+    "UpdateSource": "Executable",
+    "UpdateSourceData": "/bin/bash",
+    "UpdateSourceArgs": "\"{{$FullInstanceDir}}install-openrvs.sh\" \"{{$FullBaseDir}}system\" \"{{$FullBaseDir}}system/RavenShield.ini\" \"{{$FullBaseDir}}Mods/RavenShield.mod\""
+  },
+  {
+    "UpdateStageName": "Patch R6GameService.dll",
+    "UpdateSourcePlatform": "Linux",
+    "UpdateSource": "Executable",
+    "UpdateSourceData": "/bin/bash",
+    "UpdateSourceArgs": "\"{{$FullInstanceDir}}patch-gameservice.sh\" \"{{$FullBaseDir}}system\""
+  },
+  {
     "UpdateStageName": "Initialise Wine Prefix",
     "UpdateSourcePlatform": "Linux",
     "UpdateSource": "Executable",

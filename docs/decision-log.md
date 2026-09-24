@@ -122,3 +122,119 @@ Raven Shield's parser needs.
 `raw.githubusercontent.com`. The URL is pinned to `main`, so editing
 `set-ini.sh` changes behaviour for every instance on its next update — pin a
 tag if that becomes a problem.
+
+## DEC-005 - Install OpenRVS from the pinned v1.6 release, wiring actors by script
+
+**Date:** 2026-09-24
+**Status:** Decided
+
+Added two update stages: a `FetchURL` that extracts
+`OpenRVS-v1.6.zip` over `19830/system`, and an `Executable` stage running
+`install-openrvs.sh` to rewrite `[Engine.GameEngine]` in both
+`system/RavenShield.ini` and `Mods/RavenShield.mod`.
+
+**Why:** Steam app `19830` is stock Raven Shield 1.60. The template claimed
+OpenRVS in its display name, description and `Meta.URL`, but nothing installed
+it — a freshly built instance loaded only stock packages and spawned
+`IpDrv.UdpBeacon`. Extracting the ZIP alone is not enough either; OpenRVS'
+server instructions require `OpenRVS.OpenBeacon` to *replace* `IpDrv.UdpBeacon`,
+and `set-ini.sh` cannot do that because it only rewrites existing single-valued
+keys, while `ServerActors` is multi-valued.
+
+The stage runs after SteamCMD deliberately: `app_update … validate` restores
+depot files, and `R6ClassDefines.ini` is both a depot file and shipped in the
+OpenRVS ZIP. Reversing the order silently reverts the mod.
+
+Verified by running a second `UCC.exe` against a port-shifted copy of
+`RavenShield.ini` while the AMP instance kept running, which logged
+`Spawning: OpenRVS.OpenServer`, `Spawning: OpenRVS.OpenBeacon`,
+`Resolved api.openrvs.org (184.73.85.28)` and
+`[OpenRVS.OpenRVS] info: OpenRVS is up to date (v1.6)`.
+
+**Alternatives considered:** Pin to the GitHub `releases/latest` redirect —
+rejected, an upstream release would silently change every instance on its next
+update with no changelog review. Wire `ServerActors=OpenRenderFix.OpenFix` and
+`ServerPackages=OpenRenderFix` as the upstream README instructs — rejected,
+release v1.6 ships `OpenRenderFix.utx` but no `OpenRenderFix.u`, and the class
+is absent from `OpenRVS.u` (confirmed by scanning its name table), so the actor
+would fail to resolve at load. Patch only `RavenShield.ini` and not
+`Mods/RavenShield.mod` — rejected, the upstream instructions name the `.mod`
+file and both carry an `[Engine.GameEngine]` section; patching both is
+idempotent and costs nothing.
+
+**Consequences:** Updates now require outbound HTTPS to `github.com`. Moving to
+OpenRVS v1.7 is a deliberate edit here, not a silent drift. If upstream ever
+ships `OpenRenderFix.u`, revisit the two omitted lines.
+
+## DEC-006 - Do not patch `R6GameService.dll` from the template
+
+**Date:** 2026-09-24
+**Status:** Superseded by DEC-007
+
+The `try again time` loop is left in place. The template does not modify
+`system/R6GameService.dll`.
+
+**Why:** The loop is `UR6GSServers::ProcessInternetSrv` retrying server
+registration against `gsconnect.ubisoft.com`, which resolves to
+`203.132.25.34` but returns HTTP 500 — Ubisoft's backend for this game is gone.
+OpenRVS does not address it; the retry is native code in the DLL, and OpenRVS
+is UnrealScript. Upstream's own README points at two third-party fixes rather
+than shipping one.
+
+Silently mutating a game binary during an update stage is a different class of
+action from editing config, and the payoff is cosmetic — log noise and,
+per upstream, some stutter. That is the owner's call, not the template's.
+
+**Alternatives considered:** Fetch the pre-patched DLL from
+`willroberts/raven-shield-2020` — rejected as an unpinned binary from a
+personal repository on the update path. Apply the patch ourselves: the diff
+against the stock depot file is exactly one byte, `0x13b0c`, `0x75` (`JNZ`) to
+`0xEB` (`JMP`) — deferred rather than rejected, because it is auditable and
+needs no third-party binary. Revisit if the stutter turns out to matter in
+play, guarded by a SHA-256 check of the stock DLL
+(`3a2f6384315c831ad7f10e499e32da3e0c4674050207ee881162f4542b3eb88f`) so a
+depot change cannot be patched blind.
+
+**Consequences:** Every server log carries a `try again time` line every 16
+seconds. Anything parsing the console — `Console.MetricsRegex`, future
+ready-detection — must tolerate it.
+
+## DEC-007 - Patch `R6GameService.dll` in place, guarded by pinned hashes
+
+**Date:** 2026-09-24
+**Status:** Decided
+
+Supersedes DEC-006. The template now ships `patch-gameservice.sh` and runs it
+as an update stage. It flips one byte in `system/R6GameService.dll`:
+offset `0x13b0c` (80652), `0x75` (`JNZ`) to `0xEB` (`JMP`), making the Ubisoft
+registration branch fall through unconditionally.
+
+**Why:** DEC-006 deferred this as cosmetic and the owner's call. The owner
+called it. The loop was measurable, not theoretical: an unpatched server logged
+`try again time` five times in 90 seconds and blocked on each retry. With the
+patch applied, a 90-second run of the same server on shifted ports logged the
+message zero times while still reaching
+`[OpenRVS.OpenRVS] info: OpenRVS is up to date (v1.6)`.
+
+The script refuses to write unless the file's SHA-256 is exactly the stock
+depot hash, *and* the byte at the offset is `0x75`, *and* the post-write hash
+equals the expected patched hash — otherwise it restores the backup and fails.
+A Steam depot update therefore turns it into a loud no-op rather than a blind
+write into a binary it no longer understands. The stock file is preserved as
+`R6GameService.dll.stock`.
+
+**Alternatives considered:** Download the pre-patched DLL from
+`willroberts/raven-shield-2020` — still rejected; the delta is one byte we can
+apply ourselves, and fetching an unpinned binary from a personal repository on
+every update is a worse supply chain than a hash-guarded `dd`. Run ChrisWak's
+`R6GameServicePatcher` — rejected, it is a Windows GUI tool and cannot run in
+an update stage. Leave it to a manual post-install step — rejected, it would be
+lost on every instance rebuild, which is exactly how this was missed the first
+time.
+
+**Consequences:** The stage must run after SteamCMD, since
+`app_update … validate` restores the depot DLL. `R6GameService.dll.stock` sits
+alongside the patched file — do not let a future backup-exclusion rule sweep it
+away, it is the only local copy of the original. If OpenRVS or Steam ever ships
+a different `R6GameService.dll`, the pinned hashes in the script must be
+re-derived before the patch can apply again.
